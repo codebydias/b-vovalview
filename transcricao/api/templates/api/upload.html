@@ -1,0 +1,11 @@
+<!-- api/templates/api/upload.html -->
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="audio" required>
+  <button type="submit">Enviar</button>
+</form>
+
+{% if transcricao %}
+  <h3>Transcrição:</h3>
+  <p>{{ transcricao }}</p>
+{% endif %}
