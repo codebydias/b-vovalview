@@ -32,6 +32,7 @@ from django.http import JsonResponse
 from faster_whisper import WhisperModel
 from django.views.decorators.csrf import csrf_exempt
 
+
 @csrf_exempt
 def transcrever_audio(request):
     if request.method == "GET":
@@ -39,13 +40,17 @@ def transcrever_audio(request):
 
     if request.method == "POST" and request.FILES.get("audio"):
         audio_file = request.FILES["audio"]
+       
+        print("Nome do arquivo:", audio_file.name)
+        print("Tipo MIME:", audio_file.content_type) 
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
                 for chunk in audio_file.chunks():
                     temp_file.write(chunk)
                 temp_file_path = temp_file.name
 
-            model = WhisperModel("base")
+            # model = WhisperModel("base")
+            model = WhisperModel("base", device="cpu")  # Força o uso da CPU
             segments, _ = model.transcribe(temp_file_path)
 
             transcricao = " ".join(segment.text for segment in segments)
